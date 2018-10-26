@@ -10,6 +10,7 @@ var ownColor = {
 };
 var score;
 
+
 function setup(){
 
   socket = io.connect('http://localhost:8000');
@@ -59,8 +60,7 @@ function setup(){
   });
 
   socket.on('readyS', function(data){
-    var p = createP(data);
-    p.position(800, 40);
+    toggleModal();
   });
 
   socket.on('emptifyGrid', function(data){
@@ -102,7 +102,7 @@ function setup(){
           score2++;
         }
       }
-      score.html("Score1: " + score1 + "  Score2: " + score2);
+      score.html(data[0].name + ": " + score1 + "   " + data[1].name + ": " + score2);
 
   });
 
@@ -119,7 +119,7 @@ function draw(){
 }
 
 function sendmsg(){
-  socket.emit('ready', "I am ready");
+  //socket.emit('ready', "I am ready");
 
 }
 

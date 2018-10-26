@@ -35,7 +35,8 @@ var forGrid = {
   madeBold: false
 };
 
-function player(id){
+function player(name, id){
+  this.name = name;
   this.id = id;
 }
 
@@ -62,8 +63,13 @@ io.sockets.on('connection',
     if(players.length <2 && plready <= 1){
       console.log('New connection ' + socket.id);
 
-      var p = new player(socket.id);
-      players.push(p);
+      socket.on('player',
+      function(data){
+        var p = new player(data, socket.id);
+        players.push(p);
+        if(players.length >=2)
+          io.to(players[0].id).emit('turnInitialize', p1Turn.t);
+      });
 
       socket.emit('connectedmsg', forGrid);
 
@@ -80,13 +86,14 @@ io.sockets.on('connection',
       socket.disconnect();
     }
 
-    io.to(players[0].id).emit('turnInitialize', p1Turn.t);
 
     socket.on('ready',
     function(data){
       plready++;
-      if(plready>=2)
+      if(plready>=2){
         io.sockets.emit('readyS', "Game on");
+        plready = 0;
+      }
     });
 
     socket.on('emptifyGrid',
@@ -134,7 +141,8 @@ io.sockets.on('connection',
 
 setInterval(heartbeat, 200);
 function heartbeat(){
-  io.sockets.emit('showColor', "show the color");
+  if(players.length>=2)
+    io.sockets.emit('showColor', players);
 }
 
 

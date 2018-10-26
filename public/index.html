@@ -12,9 +12,43 @@
   <script src="cell.js"></script>
 </head>
 
-<body>
+<body onload="toggleModal()">
 
   <button class="ready" onclick="sendmsg();"> Ready </button>
+
+  <div class="modal">
+   <div class="modal-content">
+       <p id="gameStarting" style="font-size:20px; color:#f4511e; margin-left: 15px;"> Other players are connecting...</p>
+       <p id="leaderboard"> </p>
+       <p id="input">
+       <input type="text" id="name" maxlength="8" placeholder="Enter your name" autocomplete="off"/>
+       <button id="start" onclick="startGame()"> Start </button>
+       </p>
+   </div>
+
+   <script>
+
+   var modal = document.querySelector(".modal");
+   document.getElementById('gameStarting').style.visibility = "hidden";
+   document.getElementById('input').style.visibility = "visible";
+   function toggleModal() {
+       modal.classList.toggle("show-modal");
+   }
+
+   function startGame(){
+     if(document.getElementById('name').value == '')
+       alert('Name/Nickname input cannot be empty');
+     else{
+       name = document.getElementById("name").value;
+       socket.emit('player', name);
+       socket.emit('ready', "ready");
+       document.getElementById('gameStarting').style.visibility = "visible";
+       document.getElementById('input').style.visibility = "hidden";
+       document.getElementById('leaderboard').innerHTML = ' ';
+     }
+   }
+
+   </script>
 
 </body>
 </html>
