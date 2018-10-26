@@ -8,6 +8,7 @@ var turnClient = false;
 var ownColor = {
   color: false
 };
+var score;
 
 function setup(){
 
@@ -89,18 +90,27 @@ function setup(){
   });
 
   socket.on('showColor', function(data){
+      var score1 = 0;
+      var score2 = 0;
       for(let i=0; i<grid.length; i++){
-        if(grid[i].enclosed == 1)
+        if(grid[i].enclosed == 1){
           grid[i].fillColor(true);
-        if(grid[i].enclosed == 2)
+          score1++;
+        }
+        if(grid[i].enclosed == 2){
           grid[i].fillColor(false);
+          score2++;
+        }
       }
+      score.html("Score1: " + score1 + "  Score2: " + score2);
+
   });
 
 
   btn = select('.ready');
   btn.position(0.8*windowWidth, 20);
-
+  score = createP();
+  score.position(0.8*windowWidth, 40);
 }
 
 function draw(){
