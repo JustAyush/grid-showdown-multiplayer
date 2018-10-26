@@ -2,11 +2,12 @@
 var socket;
 var btn;
 var grid = [];
-var gridScore = [];
 var showOnce = 0;
 var gridOnce = 0;
 var turnClient = false;
-
+var ownColor = {
+  color: false
+};
 
 function setup(){
 
@@ -42,9 +43,8 @@ function setup(){
           data.p = false;
         }
 
-        var e = new Cell(i, j, data.w, data.a, data.b, data.c, data.d, data.p, data.line0, data.line1, data.line2, data.line3, data.madeBold);
+        var e = new Cell(i, j, data.w, data.a, data.b, data.c, data.d, data.p, data.line0, data.line1, data.line2, data.line3, data.madeBold, 0);
         grid.push(e);
-        gridScore.push(e);
       }
     }
     for (let i = 0; i < grid.length; i++) {
@@ -64,26 +64,18 @@ function setup(){
 
   socket.on('emptifyGrid', function(data){
     grid.splice(0, grid.length);
-    gridScore.splice(0, gridScore.length);
     background(251, 238, 193);
   });
 
   socket.on('grid', function(data){
-      var emt = new Cell(data.i, data.j, data.w, data.a, data.b, data.c, data.d, data.p, data.line0, data.line1, data.line2, data.line3, data.madeBold);
+      var emt = new Cell(data.i, data.j, data.w, data.a, data.b, data.c, data.d, data.p, data.line0, data.line1, data.line2, data.line3, data.madeBold, data.enclosed);
       grid.push(emt);
-      gridScore.push(emt);
   });
 
   socket.on('showGrid', function(data){
     for (let i = 0; i < grid.length; i++) {
       grid[i].show();
       grid[i].madeBolder();
-    }
-    for(let i=(gridScore.length-1); i>=0; i--){
-      if(gridScore[i].IsEnclosed()){
-        gridScore[i].fillColor(color);
-        gridScore.splice(i, 1);
-      }
     }
   });
 
@@ -93,7 +85,18 @@ function setup(){
 
   socket.on('turnInitialize', function(data){
       turnClient = data;
+      ownColor.color = true;
   });
+
+  socket.on('showColor', function(data){
+      for(let i=0; i<grid.length; i++){
+        if(grid[i].enclosed == 1)
+          grid[i].fillColor(true);
+        if(grid[i].enclosed == 2)
+          grid[i].fillColor(false);
+      }
+  });
+
 
   btn = select('.ready');
   btn.position(0.8*windowWidth, 20);
@@ -117,7 +120,17 @@ function mousePressed(){
           showOnce++;
           if(showOnce >= 2){
           socket.emit('emptifyGrid', "emptify the grid");
+
           for (let i = 0; i < grid.length; i++) {
+            if(grid[i].enclosed == 0){
+              if(grid[i].IsEnclosed()){
+                socket.emit('changeTurn', "change the turn");
+                if(ownColor.color)
+                  grid[i].enclosed = 1;
+                else
+                  grid[i].enclosed = 2;
+                }
+              }
             var objdata = {
               i : grid[i].i,
               j : grid[i].j,
@@ -131,21 +144,16 @@ function mousePressed(){
               line1 : grid[i].line1,
               line2 : grid[i].line2,
               line3 : grid[i].line3,
-              madeBold: grid[i].madeBold
+              madeBold: grid[i].madeBold,
+              enclosed: grid[i].enclosed
             };
             socket.emit('grid', objdata);
             }
-            socket.emit('showGrid', "show the grid");
+
+            socket.emit('showGrid', "show the gird");
             showOnce = 0;
             socket.emit('changeTurn', "change the turn");
             turnClient = false;
-        }
-        for(let i=(gridScore.length-1); i>=0; i--){
-          if(gridScore[i].IsEnclosed()){
-            socket.emit('changeTurn', "change the turn");
-            gridScore[i].fillColor(color);
-            gridScore.splice(i, 1);
-          }
         }
       }
     }

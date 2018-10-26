@@ -1,5 +1,5 @@
 class Cell {
-  constructor(i, j, w, a, b, c, d, p, line0, line1, line2, line3, madeBold) {
+  constructor(i, j, w, a, b, c, d, p, line0, line1, line2, line3, madeBold, enclosed) {
     this.i = i;
     this.j = j;
     this.w = w;
@@ -15,6 +15,7 @@ class Cell {
     this.line2 = line2;
     this.line3 = line3;
     this.madeBold = madeBold;
+    this.enclosed = enclosed;
   }
 
   show() {
@@ -151,10 +152,10 @@ class Cell {
   fillColor(color){
     stroke(0);
     strokeWeight(5);
-    // if (color == "green")
-    //   fill(141, 135, 65);
-    // if (color == "orange")
-    fill(230, 153, 0);
+    if (color)
+      fill(141, 135, 65);
+    else
+      fill(230, 153, 0);
     rect(this.x, this.y, this.w, this.w);
   }
 

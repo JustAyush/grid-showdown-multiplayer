@@ -94,10 +94,22 @@ io.sockets.on('connection',
       socket.broadcast.emit('emptifyGrid', data);
     });
 
+    socket.on('emptifyShowGrid',
+    function(data){
+      socket.broadcast.emit('emptifyShowGrid', data);
+    });
+
+
     socket.on('grid',
     function(data){
       socket.broadcast.emit('grid', data);
     });
+
+    socket.on('gridScore',
+    function(data){
+      socket.broadcast.emit('gridScore', data);
+    });
+
 
     socket.on('showGrid',
     function(data){
@@ -119,6 +131,11 @@ io.sockets.on('connection',
 
   }
 );
+
+setInterval(heartbeat, 200);
+function heartbeat(){
+  io.sockets.emit('showColor', "show the color");
+}
 
 
 
