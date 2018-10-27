@@ -125,7 +125,7 @@ function setup(){
       else
         turnDecider.html('');
       score.html("Scoreboard <br> " + data[0].name + ": " + score1 + " <br/> " + data[1].name + ": " + score2);
-      if(countFilled == (grid.length - cols*2 - rows*2 + 4)){
+      if(countFilled == 8 ){ //(grid.length - cols*2 - rows*2 + 4)
         p1Score = score1;
         p2Score = score2;
         p1Name = data[0].name;
@@ -159,7 +159,7 @@ function mousePressed(){
 
           socket.emit('emptifyGrid', "emptify the grid");
           metalSound.play();
-
+          socket.emit('emptifyGrid', "emptify the grid");
           for (let i = 0; i < grid.length; i++) {
             if(grid[i].enclosed == 0){
               if(grid[i].IsEnclosed()){

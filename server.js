@@ -34,9 +34,9 @@ var p2Turn = {
 };
 
 var forGrid = {
-  rows: 5,
-  cols: 8,
-  w : 90,
+  rows: 4,
+  cols: 6,
+  w : 110,
   a: false,
   b: false,
   c: false,
