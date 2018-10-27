@@ -21,7 +21,7 @@ function preload(){
 
 function setup(){
 
-  socket = io.connect('http://localhost:8000');
+  socket = io.connect();
 
   socket.on('connectedmsg', function(data){
     canvas = createCanvas(750, 500);
