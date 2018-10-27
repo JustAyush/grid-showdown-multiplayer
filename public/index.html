@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="libraries/p5.min.js"></script>
-  <script src="libraries/p5.dom.min.js"></script>
-  <script src="libraries/p5.sound.min.js"></script>
+
+  <title> Get ur Squares </title>
+
+  <script src="libraries/p5.js"></script>
+  <script src="libraries/p5.dom.js"></script>
+  <script src="libraries/p5.sound.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
 
   <link rel="stylesheet" type="text/css" href="style.css">
   <meta charset="utf-8">
   <script src="sketch.js"></script>
   <script src="cell.js"></script>
+
 </head>
 
 <body onload="toggleModal()">
 
-  <button class="ready" onclick="sendmsg();"> Ready </button>
-
+  <p style="text-align: center;">
+  <span style="font-size:80px; font-weight: bold; margin-top: 30px; color: white;"> Get ur Squares </span> <span style="font-family: Courgette;"> by Ayush </span>
+  <p/>
   <div class="modal">
    <div class="modal-content">
-       <p id="gameStarting" style="font-size:20px; color:#f4511e; margin-left: 15px;"> Other players are connecting...</p>
-       <p id="leaderboard"> </p>
+       <p id="gameStarting" style="font-size:20px; color: #2b52e2; margin-left: 15px;"> Your opponent is connecting...</p>
+       <p id="leaderboard" style="font-size:30px; color: #2b52e2; margin-left: 50px;"> </p>
        <p id="input">
        <input type="text" id="name" maxlength="8" placeholder="Enter your name" autocomplete="off"/>
        <button id="start" onclick="startGame()"> Start </button>

@@ -10,6 +10,7 @@ var io = require('socket.io')(server);
 var players = [];
 var plready = 0;
 var turn = true;
+var alternateTurn = false;
 var p1Turn = {
   t: true,
   f: false
@@ -20,8 +21,8 @@ var p2Turn = {
 };
 
 var forGrid = {
-  rows: 5,
-  cols: 5,
+  rows: 8,
+  cols: 12,
   w : 60,
   a: false,
   b: false,
@@ -40,23 +41,6 @@ function player(name, id){
   this.id = id;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 io.sockets.on('connection',
 
   function (socket){
@@ -67,8 +51,6 @@ io.sockets.on('connection',
       function(data){
         var p = new player(data, socket.id);
         players.push(p);
-        if(players.length >=2)
-          io.to(players[0].id).emit('turnInitialize', p1Turn.t);
       });
 
       socket.emit('connectedmsg', forGrid);
@@ -92,6 +74,7 @@ io.sockets.on('connection',
       plready++;
       if(plready>=2){
         io.sockets.emit('readyS', "Game on");
+        io.to(players[0].id).emit('turnInitialize', p1Turn.t);
         plready = 0;
       }
     });
@@ -134,6 +117,11 @@ io.sockets.on('connection',
          io.to(players[0].id).emit('turn', p1Turn.f);
          io.to(players[1].id).emit('turn', p2Turn.t);
       }
+    });
+
+    socket.on('reset',
+    function(data){
+      socket.emit('connectedmsg', forGrid);
     });
 
   }
